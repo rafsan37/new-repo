@@ -55,6 +55,29 @@ async function run (){
             const service = await servicesCollection.findOne(query);
             res.json(service);
         })
+
+        // delete data from cart delete api
+    app.delete("/delete/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await bookingsCollection.deleteOne(query);
+        res.json(result);
+      });
+      // confirmation
+      app.put('/confirmation/:id',async (req, res) => {
+        const id = req.params.id;
+
+        const query = {_id:ObjectId(id)}
+        const  options = {upsert: true}
+        const service = {
+            $set: {
+                Status: "Confirm"
+            },
+        };
+        const result = await bookingsCollection.updateOne(query, service, options);
+        res.json(result)
+        console.log(result);
+      });
         // Post API
         app.post('/services', async (req, res) => {
             const service = req.body;
